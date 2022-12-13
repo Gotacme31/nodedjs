@@ -1,7 +1,4 @@
 var fs=require("fs");
-var config=JSON.parse(fs.readFileSync("config.json"));
-var host=config.host;
-var port=config.port;
 var exp=require("express");
 var app=exp(); 
 var server = require('http').Server(app);
@@ -13,6 +10,7 @@ var modelo=require("./servidor/modelo.js");
 var juego=new modelo.Juego();
 
 app.use(exp.static(__dirname + "/cliente"));
+app.set('port', process.env.PORT || 5000);
 
 // app.get("/",function(request,response){
 // 	response.send("hola");
@@ -79,8 +77,9 @@ app.get("/cerrarSesion/:nick",function(request,response){
 
 //console.log("Servidor escuchando en "+host+":"+port);
 //app.listen(port,host);
-server.listen(port, function() {
-  console.log('Node app se está ejecutando en el puerto', port);
+server.listen(app.get('port'), function() {
+  console.log(`Node app se está ejecutando en el puerto ${app.get('port')}`);
 });
+
 
 ws.lanzarSocketSrv(io,juego);
